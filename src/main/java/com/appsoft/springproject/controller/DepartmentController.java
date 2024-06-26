@@ -2,9 +2,11 @@ package com.appsoft.springproject.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import com.appsoft.springproject.model.Department;
 import com.appsoft.springproject.service.DepartmentService;
@@ -28,4 +30,33 @@ public class DepartmentController {
 		return "DepartmentForm";
 	}
 
+	@GetMapping("/departmentList")
+	public  String deptList(Model model) {
+		
+		model.addAttribute("dList",deptService.getAllDepts());
+		return "DepartmentList";
+	}
+	
+	@GetMapping("/dept/delete")
+	public  String deleteDepartment(@RequestParam int id) {
+		
+		deptService.deleteDept(id);
+		
+		return "redirect:/departmentList";
+	}
+	
+	@GetMapping("/dept/edit")
+	public  String  editDepartment(@RequestParam int id, Model model) {
+		
+		model.addAttribute("dModel", deptService.getDeptById(id));
+		return "DepartmentEditForm";
+	}
+	
+	@PostMapping("/dept/update")
+	public   String updateDepartment(@ModelAttribute Department dept) {
+		
+		deptService.updateDept(dept);
+		return "redirect:/departmentList";
+	}
+	
 }
